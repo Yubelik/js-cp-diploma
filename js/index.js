@@ -1,24 +1,4 @@
-const movieSeancesTime = document.querySelector('.movie-seances__time');
-const movieSelector = document.querySelector('.movie');
-
-
-movieSeancesTime.addEventListener('click', function(event) {
-    event.preventDefault();
-    const timeValue = event.target.innerHTML;
-    const movieNameSelector = movieSelector.querySelector('.movie__title');
-    const movieName = movieNameSelector.innerHTML;
-
-
-    localStorage.setItem('timeFilm', timeValue);
-    console.log("timeValue ="+localStorage.getItem('timeFilm', timeValue));
-
-    localStorage.setItem('nameFilm', movieName);
-    console.log("nameFilm ="+localStorage.getItem('nameFilm', movieName));
-    // debugger;
-  
-});
-
-
+let dataSave;
 const url = 'https://jscp-diplom.netoserver.ru/';
 const headers = new Headers({
   'Content-Type': 'application/x-www-form-urlencoded'
@@ -36,15 +16,9 @@ fetch(url, {
   .then(data => {
       //ответ от сервера = объект 
       console.log(data);
-    //   console.log(data.films.result);
-
-
-    data.films.result.forEach((result,index,) => {
-        //сохраним с localStorg id фильма
-        // localStorage.setItem('hall_id', result.hall_id);
-        // localStorage.setItem('film_id', data.films.result[index].film_id);
-        // console.log(localStorage.getItem('hall_id', result.hall_id));
-        // console.log(localStorage.getItem('film_id', data.films.result[index].film_id));
+      console.log(data.films.result);
+    dataSave 
+    data.films.result.forEach((result,index,arr) => {
             // Ищем main
         const mainElement = document.querySelector('main');
             // Создаем элемент selection
@@ -73,6 +47,9 @@ fetch(url, {
             let movieTitle = document.createElement('h2');
             movieTitle.classList.add('movie__title');
             movieTitle.textContent = result.film_name;
+            localStorage.setItem(`film_name, film_id`, `${result.id}, ${result.film_name}`);
+            
+            
             movieDescriptionDiv.append(movieTitle);
             
             let movie__synopsis = document.createElement('p');
@@ -98,59 +75,91 @@ fetch(url, {
             movieSeancesHall.classList.add('movie-seances__hall');
             movieSection.append(movieSeancesHall);
 
-              data.halls.result.forEach((resultHalls,index,) => {
-                if (resultHalls.hall_id === resultSeance.seance_hallid){
-                  let movieSeancesHallTitle = document.createElement('h3');
-                  movieSeancesHallTitle.classList.add('movie-seances__hall-title');
-                  movieSeancesHallTitle.textContent = resultHalls.hall_name;
-                  movieSeancesHall.append(movieSeancesHallTitle);
-              }  
-            })
-                // data.seances.result.forEach((resultSeance,index,) => {
-                // console.log("resultHalls.hall_id =", resultHalls.hall_id);
-                // console.log("result.film_id =", result.film_id);
-                // if (resultHalls.hall_id === resultSeance.seance_hallid){
-                //       let movieSeancesHallTitle = document.createElement('h3');
-                //       movieSeancesHallTitle.classList.add('movie-seances__hall-title');
-                //       movieSeancesHallTitle.textContent = resultHalls.hall_name;
-                //       movieSeancesHall.append(movieSeancesHallTitle);
-                //   }  
-                // })
+                    let hallName = null;
+                    // перебираем все залы
+                    
+                    data.halls.result.forEach((hall, index, arr) => {
+                        //сохраняем с сторадж 
+                        localStorage.setItem('hall', hall);
+                        dataSave = localStorage.setItem('hall.hall_config', hall.hall_config);
 
-                data.seances.result.forEach((resultSeance,index,) => {
-                  // if (resultHalls.hall_id === resultSeance.seance_hallid){
-                      // let movieSeancesHallTitle = document.createElement('h3');
-                      // movieSeancesHallTitle.classList.add('movie-seances__hall-title');
-                      // movieSeancesHallTitle.textContent = resultHalls.hall_name;
-                      // movieSeancesHall.append(movieSeancesHallTitle);
-                    // }  
-                    // добавляем время сеансов
-                      const seancesList = document.createElement('ul');
-                      seancesList.classList.add('movie-seances__list');
-                      movieSeancesHall.appendChild(seancesList);
-                        if (resultSeance.seance_filmid == result.film_id){
-                            const timeBlock1 = document.createElement('li');
+                        data.seances.result.forEach((seance) => {
+                            
+                          if (seance.seance_hallid === hall.hall_id && seance.seance_filmid === result.film_id) {
+
+                             let movieSeancesHallTitle = document.createElement('h3');
+                             const seancesList = document.createElement('ul');
+                             
+                            if (hallName === null) {
+                                hallName = hall.hall_name;
+                               
+                              movieSeancesHallTitle.classList.add('movie-seances__hall-title');
+                              movieSeancesHallTitle.textContent = hall.hall_name;
+                              movieSeancesHall.append(movieSeancesHallTitle);
+                              // добавляем время сеансов
+                            seancesList.classList.add('movie-seances__list');
+                            movieSeancesHall.appendChild(seancesList);
+                            let timeBlock1 = document.createElement('li');
                             timeBlock1.classList.add('movie-seances__time-block');
-                            const timeLink1 = document.createElement('a');
+                            let timeLink1 = document.createElement('a');
                             timeLink1.classList.add('movie-seances__time');
                             timeLink1.setAttribute('href', 'hall.html');
-                            timeLink1.textContent = resultSeance.seance_time;
+                            timeLink1.textContent = seance.seance_time;
                             timeBlock1.appendChild(timeLink1);
                             seancesList.appendChild(timeBlock1);
-                          }     
+                              } else if (hall.hall_name !== hallName) {
+                                hallName = hall.hall_name;
+                                movieSeancesHallTitle.classList.add('movie-seances__hall-title');
+                                movieSeancesHallTitle.textContent = hall.hall_name;
+                                movieSeancesHall.append(movieSeancesHallTitle);
+                                seancesList.classList.add('movie-seances__list');
+                                movieSeancesHall.appendChild(seancesList);
                         
-                    })
-                })
-            
-
-
-    })
-
-
-
-
-})
+                                let timeBlock1 = document.createElement('li');
+                                timeBlock1.classList.add('movie-seances__time-block');
+                                let timeLink1 = document.createElement('a');
+                                timeLink1.classList.add('movie-seances__time');
+                                timeLink1.setAttribute('href', 'hall.html');
+                                timeLink1.textContent = seance.seance_time;
+                                timeBlock1.appendChild(timeLink1);
+                                seancesList.appendChild(timeBlock1);
+                              } else {
+                                console.log(`seance_time: ${seance.seance_time}`);
+                                const seancesList = document.createElement('ul');
+                                seancesList.classList.add('movie-seances__list');
+                                movieSeancesHall.appendChild(seancesList);
+                                let timeBlock1 = document.createElement('li');
+                                timeBlock1.classList.add('movie-seances__time-block');
+                                let timeLink1 = document.createElement('a');
+                                timeLink1.classList.add('movie-seances__time');
+                                timeLink1.setAttribute('href', 'hall.html');
+                                timeLink1.textContent = seance.seance_time;
+                                timeBlock1.appendChild(timeLink1);
+                                seancesList.append(timeBlock1);
+                                }
+                          }
+                        });
+                      });
+                })  
+            })
 .catch(error => console.error(error));
 
 
+const movieSeancesTime = document.querySelector('.movie-seances__time');
+const movieSelector = document.querySelector('.movie');
 
+movieSeancesTime.addEventListener('click', function(event) {
+    event.preventDefault();
+    const timeValue = event.target.innerHTML;
+    const movieNameSelector = movieSelector.querySelector('.movie__title');
+    const movieName = movieNameSelector.innerHTML;
+
+
+    localStorage.setItem('timeFilm', timeValue);
+    console.log("timeValue ="+localStorage.getItem('timeFilm', timeValue));
+
+    localStorage.setItem('nameFilm', movieName);
+    console.log("nameFilm ="+localStorage.getItem('nameFilm', movieName));
+    
+  
+});
