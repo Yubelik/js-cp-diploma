@@ -15,25 +15,44 @@ let seanceString = function seancesTake() {
     return undefined
   }
 }
+const timestamp = seancesTake().seanceStart; 
+const hallId = seancesTake().hallId; 
+const seanceId = seancesTake().seanceId;
 
-console.log('selectSeanse2',seanceString().filmName)
+    const url = 'https://jscp-diplom.netoserver.ru/';
+    const headers = new Headers({
+    'Content-Type': 'application/x-www-form-urlencoded'
+    });
+    const body = new URLSearchParams({
+    'event': 'event=get_hallConfig&timestamp=${value1}&hallId=${value2}&seanceId=${value3}'
+    });
+//запрос данных с сервера
+fetch(url, {
+  method: 'POST',
+  headers: headers,
+  body: body
+})
+.then(response => response.json())
+.then(data => {
+  console.log(data);
+  console.log(data.films);
 
+})
+.catch(error => console.error(error));
 
+  // const buttonAcceptin = document.querySelector('.acceptin-button');
+  // const buyingInfoTitle = document.querySelector('.buying__info-title');
+  // const buyingInfoStart = document.querySelector('.buying__info-start');
+  // const buyingInfoHall = document.querySelector('.buying__info-hall');
+  // const priceStandart = document.querySelector('.price-standart');
+  // const confStepWrapper = document.querySelector('.conf-step__wrapper');
 
+  // buyingInfoTitle.innerHTML = seanceString().filmName;
+  // buyingInfoStart.innerHTML = `Начало сеанса ${seanceString().seanceTime}`;
+  // buyingInfoHall.innerHTML = seanceString().hallName;
+  // priceStandart.innerHTML = seanceString().priceStandart;
 
-  const buttonAcceptin = document.querySelector('.acceptin-button');
-  const buyingInfoTitle = document.querySelector('.buying__info-title');
-  const buyingInfoStart = document.querySelector('.buying__info-start');
-  const buyingInfoHall = document.querySelector('.buying__info-hall');
-  const priceStandart = document.querySelector('.price-standart');
-  const confStepWrapper = document.querySelector('.conf-step__wrapper');
-
-  buyingInfoTitle.innerHTML = seanceString().filmName;
-  buyingInfoStart.innerHTML = `Начало сеанса ${seanceString().seanceTime}`;
-  buyingInfoHall.innerHTML = seanceString().hallName;
-  priceStandart.innerHTML = seanceString().priceStandart;
-
-  const params = `event=get_hallConfig&timestamp=${seanceString().seanceTimeStamp}&hallId=${seanceString().hallId}&seanceId=${seanceString().seanceId}`;
+  // const params = `event=get_hallConfig&timestamp=${seanceString().seanceTimeStamp}&hallId=${seanceString().hallId}&seanceId=${seanceString().seanceId}`;
 
   
       const mainElement = document.querySelector('main');
@@ -75,4 +94,186 @@ console.log('selectSeanse2',seanceString().filmName)
         `
       }
       mainElement.append(selectionElement);
+
+      // function selectSpan(event) {
+      //   const clickedSpan = event.target;
+      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
+        
+      //   if (isSelected) {
+      //     clickedSpan.classList.remove('conf-step__chair_selected');
+      //   } else {
+      //     clickedSpan.classList.add('conf-step__chair_selected');
+      //   }
+        
+      //   // Считываем количество выбранных элементов по группам классов
+      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected').length;
+      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected').length;
+        
+      //   // Сохраняем значения в sessionStorage
+      //   window.sessionStorage.setItem('standartSelected', standartSelected);
+      //   window.sessionStorage.setItem('vipSelected', vipSelected);
+      //   console.log(window.sessionStorage.getItem('vipSelected'));
+        
+      //   // Считаем сумму выбранных мест
+      //   const standartPrice = 250;
+      //   const vipPrice = 350;
+        
+      //   const totalStandartPrice = standartSelected * standartPrice;
+      //   const totalVipPrice = vipSelected * vipPrice;
+        
+      //   const totalPrice = totalStandartPrice + totalVipPrice;
+        
+      //   // Сохраняем значение в sessionStorage
+      //   window.sessionStorage.setItem('totalPrice', totalPrice);
+      // }
+      
+      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      
+      // allSpans.forEach(span => {
+      //   span.addEventListener('click', selectSpan);
+      // });
+
+
+      // function selectSpan(event) {
+      //   const clickedSpan = event.target;
+      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
+        
+      //   if (isSelected) {
+      //     clickedSpan.classList.remove('conf-step__chair_selected');
+      //   } else {
+      //     clickedSpan.classList.add('conf-step__chair_selected');
+      //   }
+        
+      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
+      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
+        
+      //   let selectedSeats = [];
+        
+      //   standartSelected.forEach(seat => {
+      //     const row = seat.getAttribute('data-row');
+      //     const seatNumber = seat.getAttribute('data-seat');
+          
+      //     selectedSeats.push({
+      //       row: row,
+      //       seat: seatNumber,
+      //       type: 'standart'
+      //     });
+      //   });
+        
+      //   vipSelected.forEach(seat => {
+      //     const row = seat.getAttribute('data-row');
+      //     const seatNumber = seat.getAttribute('data-seat');
+          
+      //     selectedSeats.push({
+      //       row: row,
+      //       seat: seatNumber,
+      //       type: 'vip'
+      //     });
+      //   });
+        
+      //   sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+      // }
+      
+      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      
+      // allSpans.forEach(span => {
+      //   span.addEventListener('click', selectSpan);
+      // });
+
+      // function selectSpan(event) {
+      //   const clickedSpan = event.target;
+      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
+        
+      //   if (isSelected) {
+      //     clickedSpan.classList.remove('conf-step__chair_selected');
+      //   } else {
+      //     clickedSpan.classList.add('conf-step__chair_selected');
+      //   }
+        
+      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
+      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
+        
+      //   let selectedSeats = [];
+        
+      //   standartSelected.forEach(seat => {
+      //     const row = seat.getAttribute('data-row');
+      //     const seatNumber = seat.getAttribute('data-seat');
+          
+      //     selectedSeats.push(`${row}-${seatNumber}`);
+      //   });
+        
+      //   vipSelected.forEach(seat => {
+      //     const row = seat.getAttribute('data-row');
+      //     const seatNumber = seat.getAttribute('data-seat');
+          
+      //     selectedSeats.push(`${row}-${seatNumber}`);
+      //   });
+        
+      //   sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+      // }
+      
+      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      
+      // allSpans.forEach(span => {
+      //   span.addEventListener('click', selectSpan);
+      // });
+
+
+      function selectSpan(event) {
+        const clickedSpan = event.target;
+        const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
+        
+        if (isSelected) {
+          clickedSpan.classList.remove('conf-step__chair_selected');
+        } else {
+          clickedSpan.classList.add('conf-step__chair_selected');
+        }
+        
+        const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
+        const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
+        
+        let selectedSeats = [];
+        
+        standartSelected.forEach(seat => {
+          const row = seat.closest('.conf-step__row');
+          const rowNumber = row.getAttribute('data-row');
+          const seatNumber = seat.getAttribute('data-seat');
+          
+          selectedSeats.push({
+            row: rowNumber,
+            seat: seatNumber,
+            type: 'standart'
+          });
+        });
+        
+        vipSelected.forEach(seat => {
+          const row = seat.closest('.conf-step__row');
+          const rowNumber = row.getAttribute('data-row');
+          const seatNumber = seat.getAttribute('data-seat');
+          
+          selectedSeats.push({
+            row: rowNumber,
+            seat: seatNumber,
+            type: 'vip'
+          });
+        });
+        
+        sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+      }
+      
+      const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      
+      allSpans.forEach(span => {
+        span.addEventListener('click', selectSpan);
+      });
+      
+      const rows = document.querySelectorAll('.conf-step__row');
+      
+      rows.forEach((row, index) => {
+        row.setAttribute('data-row', index + 1);
+        const seats = row.querySelectorAll('.conf-step__chair');
+        seats.forEach((seat, seatIndex) => {
+          seat.setAttribute('data-seat', seatIndex + 1);
+        })
+      });
   })
