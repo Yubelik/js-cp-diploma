@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
         body: body
     })
     .then(response => response.json())
+       
     .then(data => {
         //ответ от сервера = объект
         

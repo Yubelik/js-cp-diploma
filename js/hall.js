@@ -15,85 +15,76 @@ let seanceString = function seancesTake() {
     return undefined
   }
 }
-const timestamp = seancesTake().seanceStart; 
-const hallId = seancesTake().hallId; 
-const seanceId = seancesTake().seanceId;
+
+
+    const seanceTimeStamp = seanceString().seanceTimeStamp; 
+    const hallId = seanceString().hallId; 
+    const seanceId = seanceString().seanceId;
+    const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}`
 
     const url = 'https://jscp-diplom.netoserver.ru/';
     const headers = new Headers({
     'Content-Type': 'application/x-www-form-urlencoded'
     });
-    const body = new URLSearchParams({
-    'event': 'event=get_hallConfig&timestamp=${value1}&hallId=${value2}&seanceId=${value3}'
-    });
-//запрос данных с сервера
-fetch(url, {
-  method: 'POST',
-  headers: headers,
-  body: body
-})
-.then(response => response.json())
-.then(data => {
-  console.log(data);
-  console.log(data.films);
+      
 
-})
-.catch(error => console.error(error));
+    fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body
+    })
+    .then(response => response.json())
+    .then(data => {
+      
+    const mainElement = document.querySelector('main');
+    const selectionElement = document.createElement('buying');
+              //Добавляем в MAIN элемент SECTION
+        {
+          selectionElement.innerHTML += `
+          <section class="buying">
+        <div class="buying__info">
+          <div class="buying__info-description">
+            <h2 class="buying__info-title">${seanceString().filmName}</h2>
+            <p class="buying__info-start">Начало сеанса: ${seanceString().seanceTime}</p>
+            <p class="buying__info-hall">${seanceString().hallName}</p>          
+          </div>
+          <div class="buying__info-hint">
+            <p>Тапните дважды,<br>чтобы увеличить</p>
+          </div>
+        </div>
 
-  // const buttonAcceptin = document.querySelector('.acceptin-button');
-  // const buyingInfoTitle = document.querySelector('.buying__info-title');
-  // const buyingInfoStart = document.querySelector('.buying__info-start');
-  // const buyingInfoHall = document.querySelector('.buying__info-hall');
-  // const priceStandart = document.querySelector('.price-standart');
-  // const confStepWrapper = document.querySelector('.conf-step__wrapper');
 
-  // buyingInfoTitle.innerHTML = seanceString().filmName;
-  // buyingInfoStart.innerHTML = `Начало сеанса ${seanceString().seanceTime}`;
-  // buyingInfoHall.innerHTML = seanceString().hallName;
-  // priceStandart.innerHTML = seanceString().priceStandart;
+        <div class="conf-step">
+          <div class="conf-step__wrapper"> 
+          ${data}
+          <div class="conf-step__legend">
+              <div class="col">
+                <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_standart"></span> Свободно (<span class="conf-step__legend-value price-standart">250</span>руб)</p>
+                <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_vip"></span> Свободно VIP (<span class="conf-step__legend-value price-vip">350</span>руб)</p>            
+              </div>
+              <div class="col">
+                <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_taken"></span> Занято</p>
+                <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_selected"></span> Выбрано</p>                    
+              </div>
+            </div>
+          </div>
+          <button class="acceptin-button"  >Забронировать</button>
+          </section>
+          `
+        }
+        mainElement.append(selectionElement);
 
-  // const params = `event=get_hallConfig&timestamp=${seanceString().seanceTimeStamp}&hallId=${seanceString().hallId}&seanceId=${seanceString().seanceId}`;
+    })
+    .catch(error => console.error(error));
+
+    
+
+ 
+
+
 
   
-      const mainElement = document.querySelector('main');
-      const selectionElement = document.createElement('buying');
-            //Добавляем в MAIN элемент SECTION
-      {
-        selectionElement.innerHTML += `
-        <section class="buying">
-      <div class="buying__info">
-        <div class="buying__info-description">
-          <h2 class="buying__info-title">${seanceString().filmName}</h2>
-          <p class="buying__info-start">Начало сеанса: ${seanceString().seanceTime}</p>
-          <p class="buying__info-hall">${seanceString().hallName}</p>          
-        </div>
-        <div class="buying__info-hint">
-          <p>Тапните дважды,<br>чтобы увеличить</p>
-        </div>
-      </div>
-
-
-      <div class="conf-step">
-        <div class="conf-step__wrapper">
-          <div class="conf-step__row">
-            ${seanceString().hallConfig}
-
-            <div class="conf-step__legend">
-          <div class="col">
-            <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_standart"></span> Свободно (<span class="conf-step__legend-value price-standart">250</span>руб)</p>
-            <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_vip"></span> Свободно VIP (<span class="conf-step__legend-value price-vip">350</span>руб)</p>            
-          </div>
-          <div class="col">
-            <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_taken"></span> Занято</p>
-            <p class="conf-step__legend-price"><span class="conf-step__chair conf-step__chair_selected"></span> Выбрано</p>                    
-          </div>
-        </div>
-      </div>
-      <button class="acceptin-button"  >Забронировать</button>
-      </section>
-        `
-      }
-      mainElement.append(selectionElement);
+      
 
       // function selectSpan(event) {
       //   const clickedSpan = event.target;
@@ -261,10 +252,13 @@ fetch(url, {
         sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
       }
       
-      const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
+      const allSpans = document.querySelectorAll('conf-step__chair');
       
+      console.log("allSpans = ",allSpans);
       allSpans.forEach(span => {
         span.addEventListener('click', selectSpan);
+        
       });
       
       const rows = document.querySelectorAll('.conf-step__row');
