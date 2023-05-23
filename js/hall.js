@@ -1,52 +1,51 @@
-document.addEventListener("DOMContentLoaded", () => {
+  let seanceString = function seancesTake() {
+    let selectSeanse = window.sessionStorage.getItem("selectSeanse");
 
-let seanceString = function seancesTake() {
-  let selectSeanse = window.sessionStorage.getItem('selectSeanse')
-  
-  if (selectSeanse === null) {
-    return undefined
-  }
+    if (selectSeanse === null) {
+      return undefined;
+    }
 
-  // Если вдруг в хранилище оказался невалидный JSON предохраняемся от этого
-  try {
-    return JSON.parse(selectSeanse)
-  } catch (e) {
-    sessionStorage.removeItem('selectSeanse')
-    return undefined
-  }
-}
+    // Если вдруг в хранилище оказался невалидный JSON предохраняемся от этого
+    try {
+      return JSON.parse(selectSeanse);
+    } catch (e) {
+      sessionStorage.removeItem("selectSeanse");
+      return undefined;
+    }
+  };
 
+  const seanceTimeStamp = seanceString().seanceTimeStamp;
+  const hallId = seanceString().hallId;
+  const seanceId = seanceString().seanceId;
+  const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}`;
 
-    const seanceTimeStamp = seanceString().seanceTimeStamp; 
-    const hallId = seanceString().hallId; 
-    const seanceId = seanceString().seanceId;
-    const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}`
+  const url = "https://jscp-diplom.netoserver.ru/";
+  const headers = new Headers({
+    "Content-Type": "application/x-www-form-urlencoded",
+  });
 
-    const url = 'https://jscp-diplom.netoserver.ru/';
-    const headers = new Headers({
-    'Content-Type': 'application/x-www-form-urlencoded'
-    });
-      
-
-    fetch(url, {
-      method: 'POST',
-      headers: headers,
-      body: body
-    })
-    .then(response => response.json())
-    .then(data => {
-      
-    const mainElement = document.querySelector('main');
-    const selectionElement = document.createElement('buying');
-              //Добавляем в MAIN элемент SECTION
-        {
-          selectionElement.innerHTML += `
+  fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const mainElement = document.querySelector("main");
+      const selectionElement = document.createElement("buying");
+      //Добавляем в MAIN элемент SECTION
+      {
+        selectionElement.innerHTML += `
           <section class="buying">
         <div class="buying__info">
           <div class="buying__info-description">
             <h2 class="buying__info-title">${seanceString().filmName}</h2>
-            <p class="buying__info-start">Начало сеанса: ${seanceString().seanceTime}</p>
-            <p class="buying__info-hall">${seanceString().hallName}</p>          
+            <p class="buying__info-start">Начало сеанса: ${
+              seanceString().seanceTime
+            }</p>
+            <p class="buying__info-hall">${
+              seanceString().hallName
+            }</p>          
           </div>
           <div class="buying__info-hint">
             <p>Тапните дважды,<br>чтобы увеличить</p>
@@ -70,204 +69,83 @@ let seanceString = function seancesTake() {
           </div>
           <button class="acceptin-button"  >Забронировать</button>
           </section>
-          `
-        }
-        mainElement.append(selectionElement);
-
-    })
-    .catch(error => console.error(error));
-
-    
-
- 
-
-
-
-  
-      
-
-      // function selectSpan(event) {
-      //   const clickedSpan = event.target;
-      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
-        
-      //   if (isSelected) {
-      //     clickedSpan.classList.remove('conf-step__chair_selected');
-      //   } else {
-      //     clickedSpan.classList.add('conf-step__chair_selected');
-      //   }
-        
-      //   // Считываем количество выбранных элементов по группам классов
-      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected').length;
-      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected').length;
-        
-      //   // Сохраняем значения в sessionStorage
-      //   window.sessionStorage.setItem('standartSelected', standartSelected);
-      //   window.sessionStorage.setItem('vipSelected', vipSelected);
-      //   console.log(window.sessionStorage.getItem('vipSelected'));
-        
-      //   // Считаем сумму выбранных мест
-      //   const standartPrice = 250;
-      //   const vipPrice = 350;
-        
-      //   const totalStandartPrice = standartSelected * standartPrice;
-      //   const totalVipPrice = vipSelected * vipPrice;
-        
-      //   const totalPrice = totalStandartPrice + totalVipPrice;
-        
-      //   // Сохраняем значение в sessionStorage
-      //   window.sessionStorage.setItem('totalPrice', totalPrice);
-      // }
-      
-      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
-      
-      // allSpans.forEach(span => {
-      //   span.addEventListener('click', selectSpan);
-      // });
-
-
-      // function selectSpan(event) {
-      //   const clickedSpan = event.target;
-      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
-        
-      //   if (isSelected) {
-      //     clickedSpan.classList.remove('conf-step__chair_selected');
-      //   } else {
-      //     clickedSpan.classList.add('conf-step__chair_selected');
-      //   }
-        
-      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
-      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
-        
-      //   let selectedSeats = [];
-        
-      //   standartSelected.forEach(seat => {
-      //     const row = seat.getAttribute('data-row');
-      //     const seatNumber = seat.getAttribute('data-seat');
-          
-      //     selectedSeats.push({
-      //       row: row,
-      //       seat: seatNumber,
-      //       type: 'standart'
-      //     });
-      //   });
-        
-      //   vipSelected.forEach(seat => {
-      //     const row = seat.getAttribute('data-row');
-      //     const seatNumber = seat.getAttribute('data-seat');
-          
-      //     selectedSeats.push({
-      //       row: row,
-      //       seat: seatNumber,
-      //       type: 'vip'
-      //     });
-      //   });
-        
-      //   sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
-      // }
-      
-      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
-      
-      // allSpans.forEach(span => {
-      //   span.addEventListener('click', selectSpan);
-      // });
-
-      // function selectSpan(event) {
-      //   const clickedSpan = event.target;
-      //   const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
-        
-      //   if (isSelected) {
-      //     clickedSpan.classList.remove('conf-step__chair_selected');
-      //   } else {
-      //     clickedSpan.classList.add('conf-step__chair_selected');
-      //   }
-        
-      //   const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
-      //   const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
-        
-      //   let selectedSeats = [];
-        
-      //   standartSelected.forEach(seat => {
-      //     const row = seat.getAttribute('data-row');
-      //     const seatNumber = seat.getAttribute('data-seat');
-          
-      //     selectedSeats.push(`${row}-${seatNumber}`);
-      //   });
-        
-      //   vipSelected.forEach(seat => {
-      //     const row = seat.getAttribute('data-row');
-      //     const seatNumber = seat.getAttribute('data-seat');
-          
-      //     selectedSeats.push(`${row}-${seatNumber}`);
-      //   });
-        
-      //   sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
-      // }
-      
-      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
-      
-      // allSpans.forEach(span => {
-      //   span.addEventListener('click', selectSpan);
-      // });
-
-
-      function selectSpan(event) {
-        const clickedSpan = event.target;
-        const isSelected = clickedSpan.classList.contains('conf-step__chair_selected');
-        
-        if (isSelected) {
-          clickedSpan.classList.remove('conf-step__chair_selected');
-        } else {
-          clickedSpan.classList.add('conf-step__chair_selected');
-        }
-        
-        const standartSelected = document.querySelectorAll('.conf-step__chair_standart.conf-step__chair_selected');
-        const vipSelected = document.querySelectorAll('.conf-step__chair_vip.conf-step__chair_selected');
-        
-        let selectedSeats = [];
-        
-        standartSelected.forEach(seat => {
-          const row = seat.closest('.conf-step__row');
-          const rowNumber = row.getAttribute('data-row');
-          const seatNumber = seat.getAttribute('data-seat');
-          
-          selectedSeats.push({
-            row: rowNumber,
-            seat: seatNumber,
-            type: 'standart'
-          });
-        });
-        
-        vipSelected.forEach(seat => {
-          const row = seat.closest('.conf-step__row');
-          const rowNumber = row.getAttribute('data-row');
-          const seatNumber = seat.getAttribute('data-seat');
-          
-          selectedSeats.push({
-            row: rowNumber,
-            seat: seatNumber,
-            type: 'vip'
-          });
-        });
-        
-        sessionStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
+          `;
       }
-      
-      // const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair)');
-      const allSpans = document.querySelectorAll('conf-step__chair');
-      
-      console.log("allSpans = ",allSpans);
-      allSpans.forEach(span => {
-        span.addEventListener('click', selectSpan);
-        
+      mainElement.append(selectionElement);
+    })
+    // .then(() => selectChairFunc())
+    .then(() => processing())
+    .catch((error) => console.error(error));
+
+function processing(){
+    // const selectChairFunc = () => {
+      const allSpans = document.querySelectorAll('span.conf-step__chair:not(.conf-step__chair_disabled):not(.conf-step__legend-price span.conf-step__chair):not(.conf-step__chair_taken)');
+      allSpans.forEach((span) => {
+        span.addEventListener("click", selectSpan);
       });
-      
-      const rows = document.querySelectorAll('.conf-step__row');
-      
-      rows.forEach((row, index) => {
-        row.setAttribute('data-row', index + 1);
-        const seats = row.querySelectorAll('.conf-step__chair');
-        seats.forEach((seat, seatIndex) => {
-          seat.setAttribute('data-seat', seatIndex + 1);
-        })
+    // };
+
+    function selectSpan(event) {
+      const clickedSpan = event.target;
+      const isSelected = clickedSpan.classList.contains(
+        "conf-step__chair_selected"
+      );
+
+      if (isSelected) {
+        clickedSpan.classList.remove("conf-step__chair_selected");
+      } else {
+        clickedSpan.classList.add("conf-step__chair_selected");
+      }
+
+      const standartSelected = document.querySelectorAll(
+        ".conf-step__chair_standart.conf-step__chair_selected"
+      );
+      const vipSelected = document.querySelectorAll(
+        ".conf-step__chair_vip.conf-step__chair_selected"
+      );
+
+      let selectedSeats = [];
+
+    standartSelected.forEach((seat) => {
+      const row = seat.closest(".conf-step__row");
+      const rowNumber = row.getAttribute("data-row");
+      const seatNumber = seat.getAttribute("data-seat");
+
+      selectedSeats.push({
+        row: rowNumber,
+        seat: seatNumber,
+        price: 250,
+        type: "standart",
       });
-  })
+    });
+
+    vipSelected.forEach((seat) => {
+      const row = seat.closest(".conf-step__row");
+      const rowNumber = row.getAttribute("data-row");
+      const seatNumber = seat.getAttribute("data-seat");
+
+      selectedSeats.push({
+        row: rowNumber,
+        seat: seatNumber,
+        price: 350,
+        type: "vip",
+      });
+    });
+    sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+  }
+
+  const rows = document.querySelectorAll(".conf-step__row");
+
+  rows.forEach((row, index) => {
+    row.setAttribute("data-row", index + 1);
+    const seats = row.querySelectorAll(".conf-step__chair");
+    seats.forEach((seat, seatIndex) => {
+      seat.setAttribute("data-seat", seatIndex + 1);
+    });
+  });
+
+    const acceptButton = document.querySelector('.acceptin-button');
+    acceptButton.addEventListener('click', function() {
+      window.location.href = 'payment.html'; // переход на страницу ticket.html
+    });
+}

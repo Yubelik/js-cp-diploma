@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data.films = data.films.result; 
         data.halls = data.halls.result; 
         data.halls = data.halls.filter((hall) => hall.hall_open == 1); 
-        //   console.log(data);
+          console.log(data);
         //   console.log(data.films);
         
         const main = document.querySelector("main");

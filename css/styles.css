@@ -443,4 +443,7 @@ body {
   pointer-events: none
  }
 
+ #qrcode > * {
+  width: 100%; 
+ }
 
