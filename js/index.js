@@ -45,8 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         data.films = data.films.result; 
         data.halls = data.halls.result; 
         data.halls = data.halls.filter((hall) => hall.hall_open == 1); 
-          console.log(data);
-        //   console.log(data.films);
         
         const main = document.querySelector("main");
         data.films.forEach((film) => {
@@ -103,9 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const updateSeances = (timeStampDay) => {
                 movieSeances.forEach((movieSeance) => {
                     const timeStampSeanceDay = Number(movieSeance.dataset.seanceStart) * 60;
-                    console.log("movieSeance=",movieSeance.dataset);
                     const timeStampSeance = timeStampDay + timeStampSeanceDay;
-                    console.log("timeStampSeance=",timeStampSeance);
                     const timeStampNow = Math.trunc(+new Date() / 1000);
                     movieSeance.dataset.seanceTimeStamp = timeStampSeance;
                     console.log("timeStampDay",timeStampDay);
