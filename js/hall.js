@@ -111,12 +111,11 @@ fetch(url, {
     }
     mainElement.append(selectionElement);
   })
-  // .then(() => selectChairFunc())
+  
   .then(() => processing())
   .catch((error) => console.error(error));
 
-  function processing(){
-    
+  function processing(){   
       const rows = document.querySelectorAll(".conf-step__row");
 
       rows.forEach((row, index) => {
@@ -136,10 +135,8 @@ fetch(url, {
       allSpans.forEach((span) => {
         span.addEventListener("click", selectSpan);
       });
-    // };
 
     function selectSpan(event) {
-      console.log("clik");
       const clickedSpan = event.target;
       const isSelected = clickedSpan.classList.contains(
         "conf-step__chair_selected"
