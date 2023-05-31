@@ -94,21 +94,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 let timeStampDay = Number(event.target.dataset.timeStamp);
                 if (isNaN(timeStampDay)) {
                     timeStampDay = Number(event.target.closest(".page-nav__day").dataset.timeStamp);
-                }        
+                }    
                 return timeStampDay;
             };
-        
+            
             const updateSeances = (timeStampDay) => {
                 movieSeances.forEach((movieSeance) => {
                     const timeStampSeanceDay = Number(movieSeance.dataset.seanceStart) * 60;
                     const timeStampSeance = timeStampDay + timeStampSeanceDay;
                     const timeStampNow = Math.trunc(+new Date() / 1000);
-                    movieSeance.dataset.seanceTimeStamp = timeStampSeance;
-                    console.log("timeStampDay",timeStampDay);
-                    movieSeance.classList.toggle(
-                        "acceptin-button-disabled",
-                        timeStampSeance - timeStampNow <= 0
-                    );
+                    movieSeance.classList.toggle("acceptin-button-disabled",(timeStampSeance - timeStampNow <= 0));
                 });
             };
             //выбор в шапке дня для заказа
@@ -121,6 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     updateSeances(timeStampDay);                       
                 })
             );
+            (function() {
+            const chosenDayLink = document.querySelector(".page-nav__day_chosen");
+            // console.log("chosenDayLink",chosenDayLink);
+            const timeStampDay = Number(chosenDayLink.dataset.timeStamp);
+            updateSeances(timeStampDay);
+            })();    
 
             movieSeances.forEach((movieSeance) =>
                 movieSeance.addEventListener("click", (event) => {
