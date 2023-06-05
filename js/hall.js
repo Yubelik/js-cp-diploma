@@ -129,12 +129,10 @@ fetch(url, {
       const acceptButton = document.querySelector('.acceptin-button');
       acceptButton.addEventListener('click', function() {
         window.location.href = 'payment.html'; // переход на страницу ticket.html
+        
       });
 
-      const allSpans = document.querySelectorAll('span.conf-step__chair[data-seat]');
-      allSpans.forEach((span) => {
-        span.addEventListener("click", selectSpan);
-      });
+      
 
     function selectSpan(event) {
       const clickedSpan = event.target;
@@ -183,5 +181,30 @@ fetch(url, {
       });
     });
     sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+
+    const allSpans = document.querySelectorAll('span.conf-step__chair[data-seat]');
+      allSpans.forEach((span) => {
+        span.addEventListener("click", selectSpan);
+
+        const url = 'https://example.com/profile';
+        const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${value4}`;
+        
+        try {
+          const response = await fetch(url, {
+          method: 'POST', 
+          body: body,
+          headers: {
+          'Content-Type': 'application/json'
+        }
+        });
+        const json = await response.json();
+        console.log('Успех:', JSON.stringify(json));
+        } 
+        catch (error) {
+        console.error('Ошибка:', error);
+        }
+
+
+      });
   }
 }
