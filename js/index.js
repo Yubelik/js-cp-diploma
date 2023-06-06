@@ -46,6 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
         data.halls = data.halls.result; 
         data.halls = data.halls.filter((hall) => hall.hall_open == 1); 
         
+
+
+
+        
         const main = document.querySelector("main");
         data.films.forEach((film) => {
             let seancesHTML = '';
@@ -58,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h3 class="movie-seances__hall-title">${hall.hall_name}</h3>
                         <ul class="movie-seances__list">`;
                 seances.forEach((seance) => {
-                seancesHTML += `<li class="movie-seances__time-block"><a class="movie-seances__time" href="hall.html" data-film-name="${film.film_name}" data-film-id="${film.film_id}" data-hall-id="${hall.hall_id}" data-hall-name="${hall.hall_name}" data-price-vip="${hall.hall_price_vip}" data-price-standart="${hall.hall_price_standart}" data-seance-id="${seance.seance_id}" data-seance-start="${seance.seance_start}" data-seance-time="${seance.seance_time}">${seance.seance_time}</a></li>`;
+                seancesHTML += `<li class="movie-seances__time-block"><a class="movie-seances__time" href="hall.html"  data-film-name="${film.film_name}" data-film-id="${film.film_id}" data-hall-id="${hall.hall_id}" data-hall-name="${hall.hall_name}" data-price-vip="${hall.hall_price_vip}" data-price-standart="${hall.hall_price_standart}" data-seance-id="${seance.seance_id}" data-seance-start="${seance.seance_start}" data-seance-time="${seance.seance_time}">${seance.seance_time}</a></li>`;
                 });
                 seancesHTML += `
                         </ul>
@@ -98,14 +102,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 return timeStampDay;
             };
             
-            const updateSeances = (timeStampDay) => {
-                movieSeances.forEach((movieSeance) => {
-                    const timeStampSeanceDay = Number(movieSeance.dataset.seanceStart) * 60;
-                    const timeStampSeance = timeStampDay + timeStampSeanceDay;
-                    const timeStampNow = Math.trunc(+new Date() / 1000);
-                    movieSeance.classList.toggle("acceptin-button-disabled",(timeStampSeance - timeStampNow <= 0));
-                });
-            };
+            //формирование даташтампа для сеанса и отключение сеансов с прошедшим временем
+                const updateSeances = (timeStampDay) => {
+                    movieSeances.forEach((movieSeance) => {
+                        const timeStampSeanceDay = Number(movieSeance.dataset.seanceStart) * 60;
+                        timeStampSeance = timeStampDay + timeStampSeanceDay;
+
+                        const timeStampNow = Math.trunc(+new Date() / 1000);            
+                        movieSeance.classList.toggle("acceptin-button-disabled",(timeStampSeance - timeStampNow <= 0));
+                        
+                        movieSeance.dataset.timeStampSeance = timeStampSeance; 
+                        
+                    });
+                };
+
             //выбор в шапке дня для заказа
             dayLinks.forEach((dayLink) =>
                 dayLink.addEventListener("click", (event) => {
@@ -118,8 +128,9 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             (function() {
             const chosenDayLink = document.querySelector(".page-nav__day_chosen");
-            // console.log("chosenDayLink",chosenDayLink);
+            
             const timeStampDay = Number(chosenDayLink.dataset.timeStamp);
+            
             updateSeances(timeStampDay);
             })();    
 

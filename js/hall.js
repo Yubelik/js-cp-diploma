@@ -14,10 +14,13 @@ let seanceString = function seancesTake() {
   }
 };
 
-const seanceTimeStamp = seanceString().seanceTimeStamp;
+const timeStampSeance = seanceString().timeStampSeance;
+console.log("timeStampSeance",timeStampSeance);
+// console.log("hallConfig",seanceString().hallConfig);
+
 const hallId = seanceString().hallId;
 const seanceId = seanceString().seanceId;
-const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}`;
+const body = `event=get_hallConfig&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}`;
 
 const url = "https://jscp-diplom.netoserver.ru/";
 const headers = new Headers({
@@ -128,10 +131,23 @@ fetch(url, {
 
       const acceptButton = document.querySelector('.acceptin-button');
       acceptButton.addEventListener('click', function() {
-        window.location.href = 'payment.html'; // переход на страницу ticket.html
+        event.preventDefault();
         
-      });
+        const timeStampSeance = seanceString().timeStampSeance;
+        const hallConfiguration = document.querySelector('.conf-step__wrapper');
+        const hallConfigurationNew = hallConfiguration.innerHTML;
+        const body = `event=get_hallConfig&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${hallConfiguration}`;
+        console.log('body:', body)
+        
+        fetch(url, {
+          method: 'POST', 
+          body: body,
+          headers: headers         
+        })
+      .catch((error) => console.error(error));
 
+      window.location.href = 'payment.html'; // переход на страницу ticket.html
+      })
       
 
     function selectSpan(event) {
@@ -155,56 +171,37 @@ fetch(url, {
 
       let selectedSeats = [];
 
-    standartSelected.forEach((seat) => {
-      const row = seat.closest(".conf-step__row");
-      const rowNumber = row.getAttribute("data-row");
-      const seatNumber = seat.getAttribute("data-seat");
+      standartSelected.forEach((seat) => {
+        const row = seat.closest(".conf-step__row");
+        const rowNumber = row.getAttribute("data-row");
+        const seatNumber = seat.getAttribute("data-seat");
 
-      selectedSeats.push({
-        row: rowNumber,
-        seat: seatNumber,
-        price: 250,
-        type: "standart",
+        selectedSeats.push({
+          row: rowNumber,
+          seat: seatNumber,
+          price: 250,
+          type: "standart",
+        });
       });
-    });
 
-    vipSelected.forEach((seat) => {
-      const row = seat.closest(".conf-step__row");
-      const rowNumber = row.getAttribute("data-row");
-      const seatNumber = seat.getAttribute("data-seat");
+      vipSelected.forEach((seat) => {
+        const row = seat.closest(".conf-step__row");
+        const rowNumber = row.getAttribute("data-row");
+        const seatNumber = seat.getAttribute("data-seat");
 
-      selectedSeats.push({
-        row: rowNumber,
-        seat: seatNumber,
-        price: 350,
-        type: "vip",
+        selectedSeats.push({
+          row: rowNumber,
+          seat: seatNumber,
+          price: 350,
+          type: "vip",
+        });
       });
-    });
-    sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats));
+      sessionStorage.setItem("selectedSeats", JSON.stringify(selectedSeats)); 
+  }
+  
 
     const allSpans = document.querySelectorAll('span.conf-step__chair[data-seat]');
-      allSpans.forEach((span) => {
-        span.addEventListener("click", selectSpan);
-
-        const url = 'https://example.com/profile';
-        const body = `event=get_hallConfig&timestamp=${seanceTimeStamp}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${value4}`;
-        
-        try {
-          const response = await fetch(url, {
-          method: 'POST', 
-          body: body,
-          headers: {
-          'Content-Type': 'application/json'
-        }
-        });
-        const json = await response.json();
-        console.log('Успех:', JSON.stringify(json));
-        } 
-        catch (error) {
-        console.error('Ошибка:', error);
-        }
-
-
-      });
-  }
+    allSpans.forEach((span) => {
+      span.addEventListener("click", selectSpan);
+    });
 }
