@@ -135,8 +135,13 @@ fetch(url, {
         
         const timeStampSeance = seanceString().timeStampSeance;
         const hallConfiguration = document.querySelector('.conf-step__wrapper');
-        const hallConfigurationNew = hallConfiguration.innerHTML;
-        const body = `event=get_hallConfig&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${hallConfigurationNew}`;
+        const cloneHallConf = hallConfiguration.cloneNode(true);
+        const cloneS = cloneHallConf.querySelectorAll(".conf-step__legend");
+          cloneS.forEach(legend => {
+            legend.remove();
+          });
+        const hallConfigurationNew = cloneHallConf.innerHTML;
+        const body = `event=sale_add&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${hallConfigurationNew}`;
         console.log('body:', body)
         
         fetch(url, {
@@ -146,7 +151,7 @@ fetch(url, {
         })
       .catch((error) => console.error(error));
 
-      // window.location.href = 'payment.html'; // переход на страницу ticket.html
+      window.location.href = 'payment.html'; // переход на страницу ticket.html
       })
       
 
