@@ -136,7 +136,7 @@ fetch(url, {
         const timeStampSeance = seanceString().timeStampSeance;
         const hallConfiguration = document.querySelector('.conf-step__wrapper');
         const hallConfigurationNew = hallConfiguration.innerHTML;
-        const body = `event=get_hallConfig&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${hallConfiguration}`;
+        const body = `event=get_hallConfig&timestamp=${timeStampSeance}&hallId=${hallId}&seanceId=${seanceId}&hallConfiguration=${hallConfigurationNew}`;
         console.log('body:', body)
         
         fetch(url, {
@@ -146,7 +146,7 @@ fetch(url, {
         })
       .catch((error) => console.error(error));
 
-      window.location.href = 'payment.html'; // переход на страницу ticket.html
+      // window.location.href = 'payment.html'; // переход на страницу ticket.html
       })
       
 
